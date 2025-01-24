@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  searxng:
+    image: docker.io/searxng/searxng:latest
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    ports:
+      - 4000:8080
+    environment:
+      - SEARXNG_API_URL=http://searxng:8080
+    networks:
+      - perplexica-network
+    restart: unless-stopped
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    stdin_open: true  # Keep STDIN open
+    tty: true        # Allocate a pseudo-TTY
+
+
+networks:
+  perplexica-network:
